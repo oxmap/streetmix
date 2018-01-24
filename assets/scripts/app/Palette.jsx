@@ -88,6 +88,7 @@ class Palette extends React.Component {
         type={id}
         variantString={variantName}
         width={width * TILE_SIZE / WIDTH_PALETTE_MULTIPLIER}
+        multiplier={WIDTH_PALETTE_MULTIPLIER / TILE_SIZE}
         isUnmovable={false}
         forPalette
         randSeed={generateRandSeed()}

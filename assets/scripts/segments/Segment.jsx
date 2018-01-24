@@ -8,7 +8,6 @@ import { prettifyWidth } from '../util/width_units'
 import { SETTINGS_UNITS_METRIC } from '../users/localization'
 import { infoBubble, INFO_BUBBLE_TYPE_SEGMENT } from '../info_bubble/info_bubble'
 
-const WIDTH_PALETTE_MULTIPLIER = 4 // Dupe from palette.js
 const SEGMENT_Y_NORMAL = 265
 const SEGMENT_Y_PALETTE = 20
 const CANVAS_HEIGHT = 480
@@ -23,11 +22,13 @@ class Segment extends React.Component {
     isUnmovable: PropTypes.bool.isRequired,
     width: PropTypes.number,
     forPalette: PropTypes.bool.isRequired,
+    multiplier: PropTypes.number,
     dpi: PropTypes.number,
     units: PropTypes.number
   }
 
   static defaultProps = {
+    multiplier: 1,
     units: SETTINGS_UNITS_METRIC
   }
 
@@ -52,11 +53,10 @@ class Segment extends React.Component {
   }
 
   componentDidMount = () => {
-    const multiplier = this.props.forPalette ? (WIDTH_PALETTE_MULTIPLIER / TILE_SIZE) : 1
     const segmentWidth = this.props.width // may need to double check this. setSegmentContents() was called with other widths
     const offsetTop = this.props.forPalette ? SEGMENT_Y_PALETTE : SEGMENT_Y_NORMAL
     const ctx = this.refs.canvas.getContext('2d')
-    drawSegmentContents(ctx, this.props.type, this.props.variantString, segmentWidth, 0, offsetTop, this.props.randSeed, multiplier, this.props.forPalette)
+    drawSegmentContents(ctx, this.props.type, this.props.variantString, segmentWidth, 0, offsetTop, this.props.randSeed, this.props.multiplier, this.props.forPalette)
 
     if (this.initialRender) {
       if (!this.props.forPalette) {
@@ -80,8 +80,7 @@ class Segment extends React.Component {
     const widthText = <React.Fragment>{prettifyWidth(width, this.props.units)}<wbr />\'</React.Fragment>
     const segmentWidth = this.props.width // may need to double check this. setSegmentContents() was called with other widths
 
-    const multiplier = this.props.forPalette ? (WIDTH_PALETTE_MULTIPLIER / TILE_SIZE) : 1
-    const dimensions = getVariantInfoDimensions(variantInfo, segmentWidth, multiplier)
+    const dimensions = getVariantInfoDimensions(variantInfo, segmentWidth, this.props.multiplier)
     const totalWidth = dimensions.right - dimensions.left
 
     // Canvas width and height must fit the div width in the palette to prevent extra right padding
@@ -90,7 +89,7 @@ class Segment extends React.Component {
     const canvasStyle = {
       width: this.props.forPalette ? width : totalWidth * TILE_SIZE,
       height: CANVAS_BASELINE,
-      left: (dimensions.left * TILE_SIZE * multiplier)
+      left: (dimensions.left * TILE_SIZE * this.props.multiplier)
     }
 
     return (
