@@ -33,7 +33,7 @@ class Segment extends React.Component {
   }
 
   calculateWidth = (resizeType) => {
-    let width = this.props.width / TILE_SIZE
+    let width = this.props.width
     if (!this.props.forPalette) {
       width = normalizeSegmentWidth(width, resizeType)
     }
@@ -44,7 +44,6 @@ class Segment extends React.Component {
     //   document.body.classList.remove('immediate-segment-resize')
     // }, SHORT_DELAY)
 
-    width = (width * TILE_SIZE)
     return width
   }
 
@@ -53,7 +52,7 @@ class Segment extends React.Component {
   }
 
   componentDidMount = () => {
-    const segmentWidth = this.props.width // may need to double check this. setSegmentContents() was called with other widths
+    const segmentWidth = this.props.width * TILE_SIZE // may need to double check this. setSegmentContents() was called with other widths
     const offsetTop = this.props.forPalette ? SEGMENT_Y_PALETTE : SEGMENT_Y_NORMAL
     const ctx = this.refs.canvas.getContext('2d')
     drawSegmentContents(ctx, this.props.type, this.props.variantString, segmentWidth, 0, offsetTop, this.props.randSeed, this.props.multiplier, this.props.forPalette)
@@ -78,16 +77,16 @@ class Segment extends React.Component {
     const name = variantInfo.name || segmentInfo.name
     const width = this.calculateWidth(RESIZE_TYPE_INITIAL)
     const widthText = <React.Fragment>{prettifyWidth(width, this.props.units)}<wbr />\'</React.Fragment>
-    const segmentWidth = this.props.width // may need to double check this. setSegmentContents() was called with other widths
+    const segmentWidth = this.props.width * TILE_SIZE // may need to double check this. setSegmentContents() was called with other widths
 
     const dimensions = getVariantInfoDimensions(variantInfo, segmentWidth, this.props.multiplier)
     const totalWidth = dimensions.right - dimensions.left
 
     // Canvas width and height must fit the div width in the palette to prevent extra right padding
-    const canvasWidth = this.props.forPalette ? width * this.props.dpi : totalWidth * TILE_SIZE * this.props.dpi
+    const canvasWidth = this.props.forPalette ? width * TILE_SIZE * this.props.dpi : totalWidth * TILE_SIZE * this.props.dpi
     const canvasHeight = CANVAS_BASELINE * this.props.dpi
     const canvasStyle = {
-      width: this.props.forPalette ? width : totalWidth * TILE_SIZE,
+      width: this.props.forPalette ? width * TILE_SIZE : totalWidth * TILE_SIZE,
       height: CANVAS_BASELINE,
       left: (dimensions.left * TILE_SIZE * this.props.multiplier)
     }
@@ -95,7 +94,7 @@ class Segment extends React.Component {
     return (
       <div
         style={{
-          width: width,
+          width: width * TILE_SIZE,
           // In a street, certain segments have stacking priority over others (expressed as z-index).
           // In a palette, segments are side-by-side so they don't need stacking priority.
           // Setting a z-index here will clobber a separate z-index (applied via CSS) when hovered by mouse pointer
@@ -105,7 +104,7 @@ class Segment extends React.Component {
         data-segment-type={this.props.type}
         data-variant-string={this.props.variantString}
         data-rand-seed={this.props.randSeed}
-        data-width={width}
+        data-width={width * TILE_SIZE}
         title={this.props.forPalette ? segmentInfo.name : null}>
         {!this.props.forPalette &&
           <React.Fragment>

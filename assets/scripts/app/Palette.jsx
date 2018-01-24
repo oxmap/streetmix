@@ -87,7 +87,7 @@ class Palette extends React.Component {
         key={id}
         type={id}
         variantString={variantName}
-        width={width * TILE_SIZE / WIDTH_PALETTE_MULTIPLIER}
+        width={width / WIDTH_PALETTE_MULTIPLIER}
         multiplier={WIDTH_PALETTE_MULTIPLIER / TILE_SIZE}
         isUnmovable={false}
         forPalette
