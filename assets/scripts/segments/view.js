@@ -26,7 +26,6 @@ const CANVAS_GROUND = 35
 const CANVAS_BASELINE = CANVAS_HEIGHT - CANVAS_GROUND
 
 const SEGMENT_Y_NORMAL = 265
-const SEGMENT_Y_PALETTE = 20
 
 const DRAGGING_MOVE_HOLE_WIDTH = 40
 
@@ -274,18 +273,16 @@ export function drawSegmentContents (ctx, type, variantString, segmentWidth, off
   }
 }
 
-export function setSegmentContents (el, type, variantString, segmentWidth, randSeed, palette, quickUpdate) {
+export function setSegmentContents (el, type, variantString, segmentWidth, randSeed, quickUpdate) {
   let canvasEl
   const variantInfo = getSegmentVariantInfo(type, variantString)
 
-  var WIDTH_PALETTE_MULTIPLIER = 4 // Dupe from palette.js
-
-  var multiplier = palette ? (WIDTH_PALETTE_MULTIPLIER / TILE_SIZE) : 1
+  var multiplier = 1
   var dimensions = getVariantInfoDimensions(variantInfo, segmentWidth, multiplier)
 
   var totalWidth = dimensions.right - dimensions.left
 
-  var offsetTop = palette ? SEGMENT_Y_PALETTE : SEGMENT_Y_NORMAL
+  var offsetTop = SEGMENT_Y_NORMAL
 
   if (!quickUpdate) {
     var hoverBkEl = document.createElement('div')
@@ -306,7 +303,7 @@ export function setSegmentContents (el, type, variantString, segmentWidth, randS
 
   var ctx = canvasEl.getContext('2d')
 
-  drawSegmentContents(ctx, type, variantString, segmentWidth, 0, offsetTop, randSeed, multiplier, palette)
+  drawSegmentContents(ctx, type, variantString, segmentWidth, 0, offsetTop, randSeed, multiplier, false)
 
   if (!quickUpdate) {
     const removeEl = el.querySelector('canvas')
@@ -319,7 +316,7 @@ export function setSegmentContents (el, type, variantString, segmentWidth, randS
   }
 }
 
-export function createSegment (type, variantString, width, isUnmovable, palette, randSeed) {
+export function createSegment (type, variantString, width, isUnmovable, randSeed) {
   let innerEl, dragHandleEl
   var el = document.createElement('div')
   el.classList.add('segment')
@@ -335,56 +332,53 @@ export function createSegment (type, variantString, width, isUnmovable, palette,
 
   const segmentInfo = getSegmentInfo(type)
 
-  if (!palette) {
-    el.style.zIndex = segmentInfo.zIndex
+  // Render a non-palette segment
+  el.style.zIndex = segmentInfo.zIndex
 
-    const variantInfo = getSegmentVariantInfo(type, variantString)
-    const name = variantInfo.name || segmentInfo.name
+  const variantInfo = getSegmentVariantInfo(type, variantString)
+  const name = variantInfo.name || segmentInfo.name
 
-    innerEl = document.createElement('span')
-    innerEl.classList.add('name')
-    innerEl.innerHTML = name // TODO: localize
-    el.appendChild(innerEl)
+  innerEl = document.createElement('span')
+  innerEl.classList.add('name')
+  innerEl.innerHTML = name // TODO: localize
+  el.appendChild(innerEl)
 
-    innerEl = document.createElement('span')
-    innerEl.classList.add('width')
-    el.appendChild(innerEl)
+  innerEl = document.createElement('span')
+  innerEl.classList.add('width')
+  el.appendChild(innerEl)
 
-    dragHandleEl = document.createElement('span')
-    dragHandleEl.classList.add('drag-handle')
-    dragHandleEl.classList.add('left')
-    dragHandleEl.segmentEl = el
-    dragHandleEl.innerHTML = '‹'
-    el.appendChild(dragHandleEl)
+  dragHandleEl = document.createElement('span')
+  dragHandleEl.classList.add('drag-handle')
+  dragHandleEl.classList.add('left')
+  dragHandleEl.segmentEl = el
+  dragHandleEl.innerHTML = '‹'
+  el.appendChild(dragHandleEl)
 
-    dragHandleEl = document.createElement('span')
-    dragHandleEl.classList.add('drag-handle')
-    dragHandleEl.classList.add('right')
-    dragHandleEl.segmentEl = el
-    dragHandleEl.innerHTML = '›'
-    el.appendChild(dragHandleEl)
+  dragHandleEl = document.createElement('span')
+  dragHandleEl.classList.add('drag-handle')
+  dragHandleEl.classList.add('right')
+  dragHandleEl.segmentEl = el
+  dragHandleEl.innerHTML = '›'
+  el.appendChild(dragHandleEl)
 
-    innerEl = document.createElement('span')
-    innerEl.classList.add('grid')
-    el.appendChild(innerEl)
-  } else {
-    el.setAttribute('title', segmentInfo.name)
-  }
+  innerEl = document.createElement('span')
+  innerEl.classList.add('grid')
+  el.appendChild(innerEl)
+  // end render a non-palette segment
 
   if (width) {
-    resizeSegment(el, RESIZE_TYPE_INITIAL, width / TILE_SIZE, true, palette, true)
+    resizeSegment(el, RESIZE_TYPE_INITIAL, width / TILE_SIZE, true, true)
   }
 
-  if (!palette) {
-    el.addEventListener('pointerenter', onSegmentMouseEnter)
-    el.addEventListener('pointerleave', onSegmentMouseLeave)
-  }
+  el.addEventListener('pointerenter', onSegmentMouseEnter)
+  el.addEventListener('pointerleave', onSegmentMouseLeave)
+
   return el
 }
 
 export function createSegmentDom (segment) {
   return createSegment(segment.type, segment.variantString,
-    segment.width * TILE_SIZE, segment.unmovable, false, segment.randSeed)
+    segment.width * TILE_SIZE, segment.unmovable, segment.randSeed)
 }
 
 function fillEmptySegment (el) {

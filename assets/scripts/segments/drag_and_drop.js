@@ -233,7 +233,7 @@ function handleSegmentResizeMove (event) {
     resizeType = RESIZE_TYPE_DRAGGING
   }
 
-  resizeSegment(draggingResize.segmentEl, resizeType, draggingResize.width, true, false)
+  resizeSegment(draggingResize.segmentEl, resizeType, draggingResize.width, true)
 
   draggingResize.mouseX = x
   draggingResize.mouseY = y
@@ -319,7 +319,7 @@ function handleSegmentMoveStart () {
     draggingMove.originalVariantString,
     draggingMove.originalWidth,
     draggingMove.originalRandSeed,
-    false, false)
+    false)
   document.body.appendChild(draggingMove.floatingEl)
 
   if (system.cssTransform) {
@@ -435,7 +435,7 @@ function handleSegmentMoveMove (event) {
         smartDrop.type,
         smartDrop.variantString,
         smartDrop.width,
-        draggingMove.originalRandSeed, false, true)
+        draggingMove.originalRandSeed, true)
 
       draggingMove.originalType = smartDrop.type
       draggingMove.originalVariantString = smartDrop.variantString
@@ -742,7 +742,7 @@ function handleSegmentMoveEnd (event) {
       draggingMove.originalVariantString, draggingMove.originalWidth)
 
     var newEl = createSegment(smartDrop.type,
-      smartDrop.variantString, smartDrop.width, false, false, draggingMove.originalRandSeed)
+      smartDrop.variantString, smartDrop.width, false, draggingMove.originalRandSeed)
 
     newEl.classList.add('create')
 

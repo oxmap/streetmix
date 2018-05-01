@@ -62,10 +62,8 @@ export function suppressMouseEnter () {
   return _suppressMouseEnter
 }
 
-export function resizeSegment (el, resizeType, width, updateEdit, palette, initial) {
-  if (!palette) {
-    width = normalizeSegmentWidth(width, resizeType)
-  }
+export function resizeSegment (el, resizeType, width, updateEdit, initial = false) {
+  width = normalizeSegmentWidth(width, resizeType)
 
   document.body.classList.add('immediate-segment-resize')
 
@@ -83,7 +81,7 @@ export function resizeSegment (el, resizeType, width, updateEdit, palette, initi
   }
 
   setSegmentContents(el, el.getAttribute('type'),
-    el.getAttribute('variant-string'), width * TILE_SIZE, parseInt(el.getAttribute('rand-seed')), palette, false)
+    el.getAttribute('variant-string'), width * TILE_SIZE, parseInt(el.getAttribute('rand-seed')), false)
 
   if (!initial) {
     segmentsChanged()
@@ -94,7 +92,7 @@ export function resizeSegment (el, resizeType, width, updateEdit, palette, initi
 }
 
 export function handleSegmentResizeCancel () {
-  resizeSegment(draggingResize.segmentEl, RESIZE_TYPE_INITIAL, draggingResize.originalWidth, true, false)
+  resizeSegment(draggingResize.segmentEl, RESIZE_TYPE_INITIAL, draggingResize.originalWidth, true)
 
   handleSegmentResizeEnd()
 }
@@ -187,7 +185,7 @@ export function incrementSegmentWidth (segmentEl, add, precise, origWidth) {
   }
   width = normalizeSegmentWidth(width + increment, RESIZE_TYPE_INCREMENT)
 
-  resizeSegment(segmentEl, RESIZE_TYPE_INCREMENT, width, true, false)
+  resizeSegment(segmentEl, RESIZE_TYPE_INCREMENT, width, true)
 
   return width
 }

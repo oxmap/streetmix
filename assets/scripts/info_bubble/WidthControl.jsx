@@ -207,7 +207,7 @@ class WidthControl extends React.Component {
     switch (event.keyCode) {
       case KEYS.ENTER:
         this.updateModel(event.target.value)
-        // const normalizedValue = resizeSegment(this.props.segmentEl, RESIZE_TYPE_TYPING, event.target.value, false, false)
+        // const normalizedValue = resizeSegment(this.props.segmentEl, RESIZE_TYPE_TYPING, event.target.value, false)
         // this.props.changeSegmentWidth(this.props.position, normalizedValue)
 
         this.setState({
@@ -241,7 +241,7 @@ class WidthControl extends React.Component {
   updateModel = (value) => {
     const processedValue = processWidthInput(value, this.props.units)
     if (processedValue) {
-      const normalizedValue = resizeSegment(this.props.segmentEl, RESIZE_TYPE_TYPING, processedValue, false, false)
+      const normalizedValue = resizeSegment(this.props.segmentEl, RESIZE_TYPE_TYPING, processedValue, false)
       this.props.changeSegmentWidth(this.props.position, normalizedValue)
     }
   }
