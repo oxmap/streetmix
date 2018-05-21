@@ -19,6 +19,7 @@ import {
 import { prettifyWidth } from '../util/width_units'
 import { getVariantString } from './variant_utils'
 import store from '../store'
+import { setHoveredSegment } from '../store/actions/ui'
 
 const CANVAS_HEIGHT = 480
 const CANVAS_GROUND = 35
@@ -507,7 +508,6 @@ export function changeSegmentVariantLegacy (dataNo, variantName, variantChoice) 
   el.classList.add('immediate-show-drag-handles')
   el.classList.add('hide-drag-handles-when-inside-info-bubble')
   infoBubble.segmentEl = el
-  infoBubble.segment = segment
 
   repositionSegments()
   recalculateWidth()
@@ -609,9 +609,11 @@ function onSegmentMouseEnter (event) {
     return
   }
 
+  store.dispatch(setHoveredSegment(Number.parseInt(this.dataNo)))
   infoBubble.considerShowing(event, this, INFO_BUBBLE_TYPE_SEGMENT)
 }
 
 function onSegmentMouseLeave () {
+  store.dispatch(setHoveredSegment(null))
   infoBubble.dontConsiderShowing()
 }

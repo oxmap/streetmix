@@ -10,6 +10,7 @@ import { SETTINGS_UNITS_METRIC } from '../users/localization'
 import { infoBubble } from '../info_bubble/info_bubble'
 import { INFO_BUBBLE_TYPE_SEGMENT } from '../info_bubble/constants'
 import { t } from '../app/locale'
+import { setHoveredSegment } from '../store/actions/ui'
 
 const WIDTH_PALETTE_MULTIPLIER = 4 // Dupe from palette.js
 const SEGMENT_Y_NORMAL = 265
@@ -20,6 +21,7 @@ const CANVAS_BASELINE = CANVAS_HEIGHT - CANVAS_GROUND
 
 class Segment extends React.Component {
   static propTypes = {
+    setHoveredSegment: PropTypes.func,
     type: PropTypes.string.isRequired,
     variantString: PropTypes.string.isRequired,
     randSeed: PropTypes.number,
@@ -142,10 +144,12 @@ class Segment extends React.Component {
       return
     }
 
+    this.props.setHoveredSegment(Number.parseInt(this.dataNo))
     infoBubble.considerShowing(event, this, INFO_BUBBLE_TYPE_SEGMENT)
   }
 
   onSegmentMouseLeave = () => {
+    this.props.setHoveredSegment(null)
     infoBubble.dontConsiderShowing()
   }
 }
@@ -156,4 +160,10 @@ function mapStateToProps (state) {
   }
 }
 
-export default connect(mapStateToProps)(Segment)
+function mapDispatchToProps (dispatch) {
+  return {
+    setHoveredSegment: (position) => { dispatch(setHoveredSegment(position)) }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Segment)
