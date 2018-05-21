@@ -610,7 +610,7 @@ function onSegmentMouseEnter (event) {
   }
 
   store.dispatch(setHoveredSegment(Number.parseInt(this.dataNo)))
-  infoBubble.considerShowing(event, this, INFO_BUBBLE_TYPE_SEGMENT)
+  infoBubble.considerShowing(event, null, INFO_BUBBLE_TYPE_SEGMENT)
 }
 
 function onSegmentMouseLeave () {

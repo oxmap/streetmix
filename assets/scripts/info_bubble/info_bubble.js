@@ -10,6 +10,7 @@ import {
   setInfoBubbleSegmentDataNo,
   updateHoverPolygon
 } from '../store/actions/infoBubble'
+import { setHoveredSegment } from '../store/actions/ui'
 
 const INFO_BUBBLE_MARGIN_BUBBLE = 20
 const INFO_BUBBLE_MARGIN_MOUSE = 10
@@ -235,15 +236,21 @@ export const infoBubble = {
     }
 
     let segmentEl
-    const hoveredEl = store.getState().ui.hoveredSegment
-    if (!hoveredEl) return
-    if (hoveredEl === 'left') {
-      segmentEl = document.querySelectorAll('.street-section-building')[0]
-    } else if (hoveredEl === 'right') {
-      segmentEl = document.querySelectorAll('.street-section-building')[1]
+    // Some interactions pass the element directly in as an argument. This will
+    // be deprecated in the very near future.
+    if (legacySegmentEl) {
+      segmentEl = legacySegmentEl
     } else {
-      const segments = document.getElementById('street-section-editable').querySelectorAll('.segment')
-      segmentEl = segments[hoveredEl]
+      const hoveredEl = store.getState().ui.hoveredSegment
+      if (!hoveredEl && hoveredEl !== 0) return
+      if (hoveredEl === 'left') {
+        segmentEl = document.querySelectorAll('.street-section-building')[0]
+      } else if (hoveredEl === 'right') {
+        segmentEl = document.querySelectorAll('.street-section-building')[1]
+      } else {
+        const segments = document.getElementById('street-section-editable').querySelectorAll('.segment')
+        segmentEl = segments[hoveredEl]
+      }
     }
     if (!segmentEl) return
 
@@ -306,6 +313,7 @@ export const infoBubble = {
     infoBubble.type = type
 
     if (segmentEl) {
+      store.dispatch(setHoveredSegment(Number.parseInt(segmentEl.dataNo)))
       segmentEl.classList.add('hover')
       segmentEl.classList.add('show-drag-handles')
     }

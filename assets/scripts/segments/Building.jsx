@@ -76,7 +76,7 @@ class Building extends React.Component {
 
     this.props.setHoveredSegment(this.props.position)
 
-    infoBubble.considerShowing(event, this.streetSectionBuilding, type)
+    infoBubble.considerShowing(event, null, type)
     resumeFadeoutControls()
   }
 
@@ -86,7 +86,6 @@ class Building extends React.Component {
       infoBubble.dontConsiderShowing()
     }
 
-    // Is this necessary? (double check that it does not clobber when moving to another segment)
     this.props.setHoveredSegment(null)
   }
 

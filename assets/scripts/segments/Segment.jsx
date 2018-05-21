@@ -145,7 +145,7 @@ class Segment extends React.Component {
     }
 
     this.props.setHoveredSegment(Number.parseInt(this.dataNo))
-    infoBubble.considerShowing(event, this, INFO_BUBBLE_TYPE_SEGMENT)
+    infoBubble.considerShowing(event, null, INFO_BUBBLE_TYPE_SEGMENT)
   }
 
   onSegmentMouseLeave = () => {
