@@ -2,11 +2,19 @@ import { registerKeypress } from '../app/keypress'
 import { showStatusMessage } from '../app/status_message'
 import { infoBubble, isDescriptionVisible } from '../info_bubble/info_bubble'
 import { createDomFromData } from '../streets/data_model'
-import { getHoveredSegmentEl } from './hover'
 import { segmentsChanged, switchSegmentElAway } from './view'
 import { t } from '../app/locale'
 import { removeSegment as removeSegmentActionCreator, clearSegments } from '../store/actions/street'
 import store from '../store'
+
+/**
+ * Get the currently hovered segment
+ * This is for keyboard commands (e.g. "delete") that
+ * act on whichever is segment is being hovered upon
+ */
+function getHoveredSegmentEl () {
+  return document.querySelector('.segment.hover')
+}
 
 /**
  * Removes a segment, given the element to remove
