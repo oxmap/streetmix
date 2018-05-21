@@ -229,10 +229,23 @@ export const infoBubble = {
     }
   },
 
-  considerShowing: function (event, segmentEl, type) {
+  considerShowing: function (event, legacySegmentEl, type) {
     if (Boolean(store.getState().menus.activeMenu) === true || app.readOnly) {
       return
     }
+
+    let segmentEl
+    const hoveredEl = store.getState().ui.hoveredSegment
+    if (!hoveredEl) return
+    if (hoveredEl === 'left') {
+      segmentEl = document.querySelectorAll('.street-section-building')[0]
+    } else if (hoveredEl === 'right') {
+      segmentEl = document.querySelectorAll('.street-section-building')[1]
+    } else {
+      const segments = document.getElementById('street-section-editable').querySelectorAll('.segment')
+      segmentEl = segments[hoveredEl]
+    }
+    if (!segmentEl) return
 
     if (event) {
       infoBubble.considerMouseX = event.pageX
