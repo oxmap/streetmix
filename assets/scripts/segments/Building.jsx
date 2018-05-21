@@ -11,12 +11,14 @@ import { infoBubble } from '../info_bubble/info_bubble'
 import { resumeFadeoutControls } from './resizing'
 import { KEYS } from '../app/keyboard_commands'
 import { addBuildingFloor, removeBuildingFloor } from '../store/actions/street'
+import { setHoveredSegment } from '../store/actions/ui'
 
 class Building extends React.Component {
   static propTypes = {
     position: PropTypes.string.isRequired,
     addBuildingFloor: PropTypes.func,
     removeBuildingFloor: PropTypes.func,
+    setHoveredSegment: PropTypes.func,
     street: PropTypes.object,
     buildingWidth: PropTypes.number,
     calculateBuildingPerspective: PropTypes.func
@@ -72,6 +74,8 @@ class Building extends React.Component {
       type = INFO_BUBBLE_TYPE_RIGHT_BUILDING
     }
 
+    this.props.setHoveredSegment(this.props.position)
+
     infoBubble.considerShowing(event, this.streetSectionBuilding, type)
     resumeFadeoutControls()
   }
@@ -81,6 +85,9 @@ class Building extends React.Component {
     if (infoBubble.considerSegmentEl === this.streetSectionBuilding) {
       infoBubble.dontConsiderShowing()
     }
+
+    // Is this necessary? (double check that it does not clobber when moving to another segment)
+    this.props.setHoveredSegment(null)
   }
 
   handleKeyDown = (event) => {
@@ -201,7 +208,8 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     removeBuildingFloor: (...args) => { dispatch(removeBuildingFloor(...args)) },
-    addBuildingFloor: (...args) => { dispatch(addBuildingFloor(...args)) }
+    addBuildingFloor: (...args) => { dispatch(addBuildingFloor(...args)) },
+    setHoveredSegment: (position) => { dispatch(setHoveredSegment(position)) }
   }
 }
 
