@@ -30,46 +30,35 @@ class App extends React.PureComponent {
 
   render () {
     return (
-      <React.Fragment>
-        <IntlProvider
-          locale={this.props.locale.locale}
-          key={`3_${this.props.locale.locale}`}
-          messages={this.props.locale.messages}
-        >
-          <React.Fragment>
-            <BlockingShield />
-            <BlockingError />
-            <Gallery />
-            <NotificationBar notification={NOTIFICATION} />
-          </React.Fragment>
-        </IntlProvider>
-        <div className="main-screen">
-          <IntlProvider
-            locale={this.props.locale.locale}
-            key={this.props.locale.locale}
-            messages={this.props.locale.messages}
-          >
-            <React.Fragment>
-              <GalleryShield />
-              <MenusContainer />
-              <StreetNameCanvas />
-              <InfoBubble />
-              <DebugHoverPolygon />
-              <WelcomePanel />
-              <Palette />
-              <DialogRoot />
-              <StatusMessage />
-              <NoConnectionMessage />
-            </React.Fragment>
-          </IntlProvider>
+      <IntlProvider
+        locale={this.props.locale.locale}
+        key={this.props.locale.locale}
+        messages={this.props.locale.messages}
+      >
+        <React.Fragment>
+          <BlockingShield />
+          <BlockingError />
+          <Gallery />
+          <NotificationBar notification={NOTIFICATION} />
+          <div className="main-screen">
+            <GalleryShield />
+            <MenusContainer />
+            <StreetNameCanvas />
+            <InfoBubble />
+            <DebugHoverPolygon />
+            <WelcomePanel />
+            <Palette />
+            <DialogRoot />
+            <StatusMessage />
+            <NoConnectionMessage />
+            <StreetView />
+          </div>
 
-          <StreetView />
-        </div>
-
-        <Flash />
-        <DebugInfo />
-        <PrintContainer />
-      </React.Fragment>
+          <Flash />
+          <DebugInfo />
+          <PrintContainer />
+        </React.Fragment>
+      </IntlProvider>
     )
   }
 }
