@@ -423,22 +423,50 @@ export function getStreetUrl (street) {
 }
 
 export function prepareDefaultStreet () {
+  // const defaultStreet = {
+  //   units: getUnits(),
+  //   location: null,
+  //   name: null,
+  //   userUpdated: false,
+  //   editCount: 0,
+  //   leftBuildingHeight: DEFAULT_BUILDING_HEIGHT_LEFT,
+  //   leftBuildingVariant: DEFAULT_BUILDING_VARIANT_LEFT,
+  //   rightBuildingHeight: DEFAULT_BUILDING_HEIGHT_RIGHT,
+  //   rightBuildingVariant: DEFAULT_BUILDING_VARIANT_RIGHT,
+  //   schemaVersion: LATEST_SCHEMA_VERSION
+  // }
+
   const defaultStreet = {
     units: getUnits(),
-    location: null,
-    name: null,
+    location: {
+      latlng: {
+        lat: 40.910168,
+        lng: -73.783133
+      },
+      wofId: 'us/ny/westchester:67c3ddb0f50531ee',
+      label: '264 Huguenot St, New Rochelle, NY, USA',
+      hierarchy: {
+        country: 'United States',
+        region: 'New York',
+        locality: 'New Rochelle',
+        street: 'Huguenot St'
+      },
+      geometryId: 'e202e39e18468372ef753f56b831ce5a',
+      intersectionId: '334c4f798938501894b96f535a9d80ac'
+    },
+    name: 'Huguenot St',
     userUpdated: false,
     editCount: 0,
-    leftBuildingHeight: DEFAULT_BUILDING_HEIGHT_LEFT,
-    leftBuildingVariant: DEFAULT_BUILDING_VARIANT_LEFT,
-    rightBuildingHeight: DEFAULT_BUILDING_HEIGHT_RIGHT,
-    rightBuildingVariant: DEFAULT_BUILDING_VARIANT_RIGHT,
+    leftBuildingHeight: 8,
+    leftBuildingVariant: 'wide',
+    rightBuildingHeight: 1,
+    rightBuildingVariant: 'grass',
     schemaVersion: LATEST_SCHEMA_VERSION
   }
 
   store.dispatch(updateStreetData(defaultStreet))
   propagateUnits()
-  store.dispatch(updateStreetWidth(normalizeStreetWidth(DEFAULT_STREET_WIDTH)))
+  store.dispatch(updateStreetWidth(normalizeStreetWidth(72)))
 
   // console.log('editCount = 0 on default street')
   if (isSignedIn()) {
