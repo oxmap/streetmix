@@ -18,6 +18,10 @@ import { KEYS } from '../app/keyboard_commands'
 import { trackEvent } from '../app/event_tracking'
 import { t } from '../locales/locale'
 
+import { DragSource } from 'react-dnd'
+import { Types, segmentSource, collectDragSource } from './drag_and_drop'
+import flow from 'lodash/flow'
+
 class Segment extends React.Component {
   static propTypes = {
     type: PropTypes.string.isRequired,
@@ -37,6 +41,8 @@ class Segment extends React.Component {
     infoBubbleHovered: PropTypes.bool,
     descriptionVisible: PropTypes.bool,
     suppressMouseEnter: PropTypes.bool.isRequired
+    connectDragSource: PropTypes.func,
+    isDragging: PropTypes.bool
   }
 
   static defaultProps = {
@@ -115,8 +121,9 @@ class Segment extends React.Component {
 
   renderSegmentCanvas = (width, variantType) => {
     const isOldVariant = (variantType === 'old')
+    const { connectDragSource } = this.props
 
-    return (
+    return connectDragSource(
       <div className="segment-canvas-container">
         <SegmentCanvas
           width={width}
@@ -221,10 +228,20 @@ class Segment extends React.Component {
       'data-width': widthValue
     }
 
+    const classNames = ['segment']
+    if (this.props.isUnmovable) {
+      classNames.push('unmovable')
+    }
+    if (this.props.forPalette) {
+      classNames.push('segment-in-palette')
+    } else if (this.props.isDragging) {
+      classNames.push('dragged-out')
+    }
+
     return (
       <div
         style={segmentStyle}
-        className={'segment' + (this.props.isUnmovable ? ' unmovable' : '') + (this.props.forPalette ? ' segment-in-palette' : '')}
+        className={classNames.join(' ')}
         {...dataAttributes}
         title={this.props.forPalette ? localizedSegmentName : null}
         ref={(ref) => { this.streetSegment = ref }}
@@ -287,4 +304,7 @@ function mapStateToProps (state) {
   }
 }
 
-export default connect(mapStateToProps)(Segment)
+export default flow(
+  connect(mapStateToProps),
+  DragSource(Types.SEGMENT, segmentSource, collectDragSource)
+)(Segment)
