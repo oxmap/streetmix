@@ -18,9 +18,15 @@ import { KEYS } from '../app/keyboard_commands'
 import { trackEvent } from '../app/event_tracking'
 import { t } from '../locales/locale'
 
-import { DragSource } from 'react-dnd'
+import { DragSource, DropTarget } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
-import { Types, segmentSource, collectDragSource } from './drag_and_drop'
+import {
+  Types,
+  segmentSource,
+  collectDragSource,
+  segmentTarget,
+  collectDropTarget
+} from './drag_and_drop'
 import flow from 'lodash/flow'
 
 class Segment extends React.Component {
@@ -44,7 +50,8 @@ class Segment extends React.Component {
     suppressMouseEnter: PropTypes.bool.isRequired
     connectDragSource: PropTypes.func,
     isDragging: PropTypes.bool,
-    connectDragPreview: PropTypes.func
+    connectDragPreview: PropTypes.func,
+    connectDropTarget: PropTypes.func
   }
 
   static defaultProps = {
@@ -242,7 +249,7 @@ class Segment extends React.Component {
       classNames.push('dragged-out')
     }
 
-    return (
+    return this.props.connectDropTarget(
       <div
         style={segmentStyle}
         className={classNames.join(' ')}
@@ -310,5 +317,6 @@ function mapStateToProps (state) {
 
 export default flow(
   DragSource(Types.SEGMENT, segmentSource, collectDragSource),
+  DropTarget(Types.SEGMENT, segmentTarget, collectDropTarget),
   connect(mapStateToProps)
 )(Segment)
