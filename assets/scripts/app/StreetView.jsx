@@ -14,6 +14,7 @@ import SkyBackground from './SkyBackground'
 import ScrollIndicators from './ScrollIndicators'
 import Building from '../segments/Building'
 import EmptySegmentContainer from '../segments/EmptySegmentContainer'
+import SegmentDragLayer from '../segments/SegmentDragLayer'
 import { infoBubble } from '../info_bubble/info_bubble'
 import { animate, getElAbsolutePos } from '../util/helpers'
 import { MAX_CUSTOM_STREET_WIDTH } from '../streets/width'
@@ -201,6 +202,7 @@ class StreetView extends React.Component {
           ref={(ref) => { this.streetSectionOuter = ref }}
         >
           <section id="street-section-inner" ref={(ref) => { this.streetSectionInner = ref }}>
+            <SegmentDragLayer />
             <section id="street-section-canvas" ref={(ref) => { this.streetSectionCanvas = ref }}>
               <Building
                 position="left"
