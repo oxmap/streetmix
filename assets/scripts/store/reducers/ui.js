@@ -39,9 +39,9 @@ const ui = (state = initialState, action) => {
       }
     case UPDATE_DRAGGING_STATE:
       const draggingState = {
-        segmentBeforeEl: action.segmentBeforeEl,
-        segmentAfterEl: action.segmentAfterEl,
-        draggedSegment: action.draggedSegment
+        hoveredSegment: action.hoveredSegment,
+        draggedSegment: action.draggedSegment,
+        fromPalette: action.fromPalette
       }
 
       return {
